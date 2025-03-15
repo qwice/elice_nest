@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
 import { ProductService } from './product.service';
+import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  // product get all
+  @Get('/all')
+  async getAllProducts(): Promise<Product[]> {
+    // 제품 테이블의 정보를 가져오는 로직
+    const product = await this.productService.getProducts();
+    return product;
   }
 
-  @Get()
-  findAll() {
-    return this.productService.findAll();
+  // 제품 등록
+  @Post('/new')
+  async createProduct(
+    @Body() createProductDto: CreateProductDto,
+  ): Promise<Product> {
+    return await this.productService.createProduct(createProductDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  // 제품 상세 정보 불러오기
+  @Get('/:id')
+  async getProduct(@Param('id') id: string): Promise<Product[]> {
+    return await this.productService.getProductById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  // 제품 수정
+  @Put('/:id')
+  async patchProduct(
+    @Param('id') id: string,
+    @Body() createProductDto: CreateProductDto,
+  ): Promise<Product> {
+    return await this.productService.updateProductById(id, createProductDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+  // 제품 삭제
+  @Delete('/:id')
+  async deleteProduct(@Param('id') id: string): Promise<string> {
+    return this.productService.deleteProduct(id)
   }
 }
