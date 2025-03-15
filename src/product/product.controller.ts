@@ -25,7 +25,7 @@ export class ProductController {
 
   // 제품 상세 정보 불러오기
   @Get('/:id')
-  async getProduct(@Param('id') id: string): Promise<Product[]> {
+  async getProduct(@Param('id') id: string): Promise<Product> {
     return await this.productService.getProductById(id);
   }
 
