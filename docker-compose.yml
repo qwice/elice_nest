@@ -1,9 +1,30 @@
-version: '3'
+
 services:
-  eliselab_database:
+  elice_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: elice_backend
+    env_file:
+      - .env
+    command: npm run start:dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - elicelab_database
+    networks:
+      - elicelab-network
+
+  elicelab_database:
     container_name: elicelab_database
     image: postgres:latest
     ports:
       - "5432:5432"
     env_file:
       - .env
+    networks:
+      - elicelab-network
+
+networks:
+  elicelab-network:
+    driver: bridge

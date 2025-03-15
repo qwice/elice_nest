@@ -1,16 +1,18 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Comment} from "../../comments/entities/comment.entity";
+import {BaseEntity} from "../../common/base.entity";
 
 @Entity()
-export class Product {
-  @PrimaryGeneratedColumn('uuid')
-  public id: string;
+export class Product extends BaseEntity{
+  @Column()
+  name: string;
 
   @Column()
-  public name: string;
+  description: string;
 
   @Column()
-  public description: string;
+  price: number;
 
-  @Column()
-  public price: number;
+  @OneToMany(()=> Comment, (comment: Comment) => comment.product)
+  public comments: Comment[];
 }

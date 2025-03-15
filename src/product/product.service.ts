@@ -6,8 +6,10 @@ import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductService {
-  @InjectRepository(Product)
-  private readonly productRepository: Repository<Product>;
+  constructor(
+      @InjectRepository(Product)
+      private readonly productRepository: Repository<Product>,
+  ) {}
 
   // 제품 모든 정보를 가져오는 로직
   async getProducts(): Promise<Product[]> {
@@ -36,9 +38,7 @@ export class ProductService {
     updateProductDto: CreateProductDto
   ): Promise<Product> {
     await this.productRepository.update(id, updateProductDto);
-    const updatedProduct = await this.productRepository.findOneBy({
-      id: id
-    });
+    const updatedProduct = await this.productRepository.findOneBy({ id: id });
     if (!updatedProduct) {
       throw new NotFoundException('Product not found after update');
     }
@@ -51,7 +51,7 @@ export class ProductService {
     if(!product){
       throw new NotFoundException('Product not found')
     }
-    await this.productRepository.delete(product);
+    await this.productRepository.delete(id);
     return 'deleted';
   }
 }

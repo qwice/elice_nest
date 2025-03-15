@@ -5,6 +5,13 @@ import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix("api");
+
+  app.enableCors({
+    origin: [],
+    credentials: false,
+  });
+
   const config = new DocumentBuilder()
       .setTitle('Elicelab_OpenAPI')
       .setDescription('Elicelab_OpenAPI')
